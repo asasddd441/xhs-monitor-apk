@@ -1,0 +1,4 @@
+Subject: 小红书通知监控 APK 已就绪
+
+在 target 中已生成可直接分发的 Markdown 报告，链接：
+- https://github.com/<owner>/<repo>/releases/latest
