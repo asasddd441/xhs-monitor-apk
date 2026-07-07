@@ -10,8 +10,6 @@
     <application
         android:allowBackup="false"
         android:label="小红书通知监听"
-        android:icon="@drawable/ic_launcher"
-        android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
