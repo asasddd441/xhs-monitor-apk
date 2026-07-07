@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="小红书通知监听"
+        android:textSize="16sp"
+        android:padding="16dp" />
+
+    <Button
+        android:id="@+id/openSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="打开通知使用权设置"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>
