@@ -29,15 +29,34 @@ jobs:
           wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip
           unzip -q gradle-8.7-bin.zip -d /opt/
 
+      - name: Print project structure
+        run: |
+          echo "=== Project structure ==="
+          find . -type f -not -path './.git/*' | sort
+          echo "=== build.gradle ==="
+          cat build.gradle
+          echo "=== app/build.gradle ==="
+          cat app/build.gradle
+          echo "=== settings.gradle ==="
+          cat settings.gradle
+          echo "=== AndroidManifest.xml ==="
+          cat app/src/main/AndroidManifest.xml
+
       - name: Build APK
-        run: /opt/gradle-8.7/bin/gradle assembleDebug --stacktrace 2>&1 | tee build_log.txt
+        run: |
+          /opt/gradle-8.7/bin/gradle assembleDebug --stacktrace --info 2>&1 | tee build_log.txt
+          echo "=== Build exit code: $? ==="
+          echo "=== Find APK files ==="
+          find . -name "*.apk" 2>/dev/null || echo "No APK found"
 
       - name: Upload APK on success
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: xhs-monitor-debug
-          path: app/build/outputs/apk/debug/*.apk
+          path: |
+            app/build/outputs/apk/debug/*.apk
+            app/build/outputs/apk/**/*.apk
 
       - name: Upload build log on failure
         if: failure()
