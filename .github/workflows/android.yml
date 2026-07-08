@@ -33,34 +33,30 @@ jobs:
         run: |
           echo "=== Project structure ==="
           find . -type f -not -path './.git/*' | sort
-          echo "=== build.gradle ==="
-          cat build.gradle
-          echo "=== app/build.gradle ==="
-          cat app/build.gradle
-          echo "=== settings.gradle ==="
-          cat settings.gradle
-          echo "=== AndroidManifest.xml ==="
-          cat app/src/main/AndroidManifest.xml
 
       - name: Build APK
+        id: build
+        continue-on-error: true
         run: |
-          /opt/gradle-8.7/bin/gradle assembleDebug --stacktrace --info 2>&1 | tee build_log.txt
-          echo "=== Build exit code: $? ==="
+          set -o pipefail
+          /opt/gradle-8.7/bin/gradle assembleDebug --stacktrace 2>&1 | tee build_log.txt
           echo "=== Find APK files ==="
           find . -name "*.apk" 2>/dev/null || echo "No APK found"
+          echo "=== Find build outputs ==="
+          find app/build -type f 2>/dev/null || echo "No build outputs"
+
+      - name: Upload build log (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build_log.txt
 
       - name: Upload APK on success
-        if: success()
+        if: steps.build.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: xhs-monitor-debug
           path: |
             app/build/outputs/apk/debug/*.apk
             app/build/outputs/apk/**/*.apk
-
-      - name: Upload build log on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-error-log
-          path: build_log.txt
