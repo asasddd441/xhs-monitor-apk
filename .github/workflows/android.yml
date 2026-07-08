@@ -28,13 +28,20 @@ jobs:
         run: |
           wget -q https://services.gradle.org/distributions/gradle-8.7-bin.zip
           unzip -q gradle-8.7-bin.zip -d /opt/
-          echo "/opt/gradle-8.7/bin" >> $GITHUB_PATH
 
       - name: Build APK
-        run: /opt/gradle-8.7/bin/gradle assembleDebug
+        run: /opt/gradle-8.7/bin/gradle assembleDebug --stacktrace 2>&1 | tee build_log.txt
 
-      - name: Upload APK
+      - name: Upload APK on success
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: xhs-monitor-debug
           path: app/build/outputs/apk/debug/*.apk
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-error-log
+          path: build_log.txt
